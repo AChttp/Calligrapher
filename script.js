@@ -116,6 +116,43 @@ function drawCurrentPath() {
     return lines;
 }*/
 
+canvas.ontouchstart =  function(event) {
+	console.log("start");
+    mouseDown = true;
+    currentPath = [];
+};
+canvas.ontouchend = function(event) {
+	console.log("end");
+    mouseDown = false;
+    points = currentPath;
+    
+    var curves = fitStroke(points);
+    //var curves = [leastSquaresFit(points)]; //reparameterize testing
+    
+    strokes.push(new Stroke(curves));
+    //strokes[0]=new Stroke(curves); //reparameterize testing
+    
+    update();
+};
+canvas.ontouchmove = function(event) {
+	console.log("move" + event.changedTouches[0].clientX+" "+event.changedTouches[0].clientY);
+    var mousePos = [event.changedTouches[0].clientX,event.changedTouches[0].clientY];
+    if(mouseDown) {
+        
+        if(currentPath.length != 0) {
+            if(getDist(mousePos,currentPath[currentPath.length-1])>=MIN_MOUSE_DIST)
+                currentPath.push(mousePos);
+            drawCurrentPath();
+        } else
+            currentPath.push(mousePos);
+    } /*else {
+        var ang = getAngle(sub([300,300],mousePos));
+        update();
+        c = setArmAngles(0,ang);
+        drawCorner(c,[300,300],0,10,context);
+    }*/ 
+};
+
 canvas.onmousedown = function(event) {
     mouseDown = true;
     currentPath = [];
