@@ -197,7 +197,13 @@ keydown = function(event) {
     }
     update();
 };
-
+var mo=function(e){e.preventDefault();};
+		function stop(){
+				document.body.style.overflow='hidden';       
+				document.addEventListener("touchmove",mo,{passive:false});//禁止页面滑动
+				console.log(1111);
+		}
+		stop();
 window.addEventListener("keydown",keydown,true);
 
 update();
